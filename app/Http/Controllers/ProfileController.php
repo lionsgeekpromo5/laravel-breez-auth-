@@ -39,8 +39,12 @@ class ProfileController extends Controller
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
         }
+        if($request->hasFile('profile_image')){
+            $path = $request->file('profile_image')->store('profile_images', 'public');
+            $request->user()->profile_image = $path;
+        }
        $request->user()->city = $request->city;
-
+        
         $request->user()->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
